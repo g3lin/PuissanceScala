@@ -91,6 +91,20 @@ object Game extends App {
     else null
   }
 
+  def determineAIdrop(board:Array[Array[Int]],player:Int) : Int ={
+    var col = 0
+
+    //On checke si la colonne est pleine
+    while ((determineDrop(board, col+1) == null) && col<6 )col += 1
+
+    // On checke si qqn gagne au prochain tour et si c'est le cas on bloque / gagne
+    for (i <- board.indices){
+      val height = determineDrop(board, i+1)
+      if  ((height != null) && (win(board, height.asInstanceOf[Int], i , 1) || win(board, height.asInstanceOf[Int], i , 2)) )col  = i
+    }
+    col+1
+  }
+
   def gameLoop(board:Array[Array[Int]]): Int ={
     var winner = 0
     var i,j = 0
@@ -128,7 +142,7 @@ object Game extends App {
 
         else {
           // Le joueur est une IA
-          col = 1
+          col = determineAIdrop(board, playerPlaying)
         }
 
         height = determineDrop(board, col)

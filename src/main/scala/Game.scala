@@ -25,7 +25,7 @@ object Game extends App {
 
 
     // On va checker les verticaux
-    while((nbAlignes <4) && (stopX ==false)){
+    while((nbAlignes <4) && !stopX){
       if (newX < 6 && newX >= 0) {
         if (board(newX)(newY) == player) {
           nbAlignes += 1
@@ -54,7 +54,7 @@ object Game extends App {
 
 
       // On va checker les horizontaux
-      while ((nbAlignes < 4) && (stopY == false)) {
+      while ((nbAlignes < 4) && !stopY ) {
         if (newY < 6 && newY >= 0) {
           if (board(newX)(newY) == player) {
             nbAlignes += 1
@@ -65,7 +65,7 @@ object Game extends App {
             if (sensY == 1) {
               newY = y - 1
               newX = x
-              sensX = -1
+              sensY = -1
             }
             else stopY = true
           }
@@ -97,8 +97,8 @@ object Game extends App {
     var i,j = 0
     while (winner ==0) {
 
-      for (i <- 0 until board.length) {
-        for (j <- 0 until board(0).length) {
+      for (i <- board.indices) {
+        for (j <- board(0).indices) {
           print(board(i)(j) + " ")
         }
         println()

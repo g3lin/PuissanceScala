@@ -13,8 +13,7 @@ object Game extends App {
     board
   }
 
-  def win(board:Array[Array[Int]], x:Int, y:Int): Boolean ={
-    val player = 1
+  def win(board:Array[Array[Int]], x:Int, y:Int, player:Int): Boolean ={
     var stopX = false
     var stopY = false
     var nbAlignes = 0
@@ -95,8 +94,20 @@ object Game extends App {
   def gameLoop(board:Array[Array[Int]]): Int ={
     var winner = 0
     var i,j = 0
+    println("Combien de joueurs ?")
+    val nbPlayer = scala.io.StdIn.readInt()
+    if ((nbPlayer > 2) || (nbPlayer < 0)) throw new Error("nombre de joueurs imvalide")
+    val player1isAI = nbPlayer == 0
+    val player2isAI = nbPlayer <= 1
+    var playerPlaying = 1
+    var col =0
+
+
+
+
     while (winner ==0) {
 
+      println("JOUEUR : "+playerPlaying)
       for (i <- board.indices) {
         for (j <- board(0).indices) {
           print(board(i)(j) + " ")
@@ -107,16 +118,44 @@ object Game extends App {
       // Proposer un move au joueur
       var height: Any = null
       while (height == null) {
-        println("Quelle action voulez vous faire ?")
-        val col = scala.io.StdIn.readInt()
-        println()
+
+        if ((playerPlaying == 1 && !player1isAI) || (playerPlaying == 2 && !player2isAI) ) {
+
+          println("Quelle action voulez vous faire ?")
+          col = scala.io.StdIn.readInt()
+          println()
+        }
+
+        else {
+          // Le joueur est une IA
+          col = 1
+        }
+
         height = determineDrop(board, col)
+
         if (height != null) {
-          board(height.asInstanceOf[Int])(col-1) = 1
-          println(win(board, height.asInstanceOf[Int], col-1))
-        } else println("Mouvement impossible")
+            board(height.asInstanceOf[Int])(col - 1) = playerPlaying
+            val won = win(board, height.asInstanceOf[Int], col - 1, playerPlaying)
+            println(won)
+            if (won) {
+              winner = playerPlaying
+              println("La partie est terminée")
+              println("Le joueur " + winner + " a gagné")
+
+              if (player1isAI && player2isAI) {
+                println("A STRANGE GAME")
+                println("THE ONLY WINNING MOVE IS")
+                println("NOT TO PLAY.\n")
+                println("HOW ABOUT A NICE GAME OF CHESS?")
+              }
+
+            }
+          } else println("Mouvement impossible")
+        }
+        if (winner == 0) playerPlaying = (playerPlaying%2) +1
+
       }
-    }
+
     winner
   }
 

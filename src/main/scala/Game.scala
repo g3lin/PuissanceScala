@@ -16,6 +16,7 @@ object Game extends App {
   def win(board:Array[Array[Int]], x:Int, y:Int, player:Int): Boolean ={
     var stopX = false
     var stopY = false
+    var stopXY = false
     var nbAlignes = 0
     var newX = x
     var newY = y
@@ -74,6 +75,56 @@ object Game extends App {
 
 
       }
+
+
+      //On va checker biais droite et gauche
+      if ((nbAlignes < 4)&& stopY){
+        nbAlignes = 0
+        newX = x
+        newY = y
+
+
+        // On va checker les biais droite et gauche
+        while ((nbAlignes < 4) && !stopXY ) {
+          if (newY < 6 && newY >= 0 && newX < 6 && newX >= 0) {
+            if (board(newX)(newY) == player) {
+              nbAlignes += 1
+              newY += sensY
+              newX += sensX
+              println("x=" + newY + " y=" + newX + " nb=" + nbAlignes+" (b)")
+            }
+            else if (sensY == 1 && sensX == 1) {
+              newY = y - 1
+              newX = x - 1
+              sensY = -1
+              sensX = -1
+            }
+
+            else if (sensY == -1 && sensX == -1) {
+              nbAlignes = 0
+              newY = y
+              newX = x
+              sensX = 1
+              sensY = -1
+            }
+            else if (sensY == -1 && sensX == 1) {
+              newY = y + 1
+              newX = x - 1
+              sensX = -1
+              sensY = 1
+            }
+            else stopXY = true
+
+          }
+          else stopXY = true
+
+
+        }
+      }
+
+
+
+
     }
 
     nbAlignes >= 4

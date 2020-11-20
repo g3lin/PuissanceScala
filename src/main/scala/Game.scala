@@ -151,7 +151,15 @@ object Game extends App {
     // On checke si qqn gagne au prochain tour et si c'est le cas on bloque / gagne
     for (i <- board.indices){
       val height = determineDrop(board, i+1)
-      if  ((height != null) && (win(board, height.asInstanceOf[Int], i , 1) || win(board, height.asInstanceOf[Int], i , 2)) )col  = i
+      println(i+1+" : "+height)
+      if  (height != null  ) {
+        board(height.asInstanceOf[Int])(i) = 1
+        if (win(board, height.asInstanceOf[Int], i , 1)) col = i
+        board(height.asInstanceOf[Int])(i) = 2
+        if (win(board, height.asInstanceOf[Int], i , 2)) col = i
+        //  reset the board
+        board(height.asInstanceOf[Int])(i) = 0
+      }
     }
     col+1
   }
@@ -207,12 +215,6 @@ object Game extends App {
               println("La partie est terminée")
               println("Le joueur " + winner + " a gagné")
 
-              if (player1isAI && player2isAI) {
-                println("A STRANGE GAME")
-                println("THE ONLY WINNING MOVE IS")
-                println("NOT TO PLAY.\n")
-                println("HOW ABOUT A NICE GAME OF CHESS?")
-              }
 
             }
           } else println("Mouvement impossible")
